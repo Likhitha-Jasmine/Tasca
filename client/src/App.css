@@ -3,7 +3,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
+  font-family: "Inter", sans-serif; /* or your preferred font */
 }
 
 .app-container {
@@ -15,7 +15,7 @@
 /* SIDEBAR */
 .sidebar {
   width: 300px;
-  background-color: #242424;
+  background-color: #1b1b1b;
   color: #fff;
   padding: 1rem;
   display: flex;
@@ -36,46 +36,65 @@
 }
 
 .mini-calendar {
-  background-color: #333;
+  background-color: #2a2a2a;
   padding: 1rem;
   border-radius: 8px;
   margin-bottom: 1rem;
 }
 
 .mini-calendar-header {
-  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 0.5rem;
+}
+
+.nav-button {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
 }
 
 .mini-calendar-days {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.4rem;
   justify-content: center;
 }
 
 .mini-calendar-day {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background-color: #3a3a3a;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  background-color: #444;
   transition: background-color 0.2s;
+  color: #ccc;
 }
 
 .mini-calendar-day:hover {
-  background-color: #666;
+  background-color: #555;
 }
 
 .mini-calendar-day.selected {
   background-color: #ff7f57;
+  color: #fff;
+}
+
+.extra-section {
+  background-color: #2a2a2a;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
 }
 
 .categories {
-  margin-top: auto; /* push categories to bottom if you like */
+  margin-top: auto; /* push to bottom */
 }
 
 .categories h3 {
@@ -84,6 +103,7 @@
 
 .categories ul {
   list-style: none;
+  padding-left: 0;
 }
 
 .categories li {
@@ -96,6 +116,8 @@
   display: flex;
   flex-direction: column;
   padding: 1rem;
+  position: relative;
+  overflow: hidden;
 }
 
 .calendar-header {
@@ -124,6 +146,11 @@
   background-color: #ccc;
 }
 
+.view-buttons .active {
+  background-color: #ff7f57;
+  color: #fff;
+}
+
 .weekdays {
   display: flex;
   justify-content: space-around;
@@ -136,18 +163,27 @@
   align-items: center;
   width: 100px;
   font-weight: bold;
+  color: #444;
 }
 
 .weekday span {
   margin-top: 0.25rem;
   font-weight: normal;
+  color: #666;
 }
 
-/* Calendar Body */
+.month-view-placeholder,
+.day-view-placeholder {
+  text-align: center;
+  padding: 1rem 0;
+  color: #888;
+}
+
+/* CALENDAR BODY */
 .calendar-body {
   display: flex;
-  flex: 1;
   margin-top: 1rem;
+  flex: 1;
 }
 
 .time-slots {
@@ -160,35 +196,64 @@
 }
 
 .time-slot {
-  height: 60px;
+  height: 60px; /* each hour is 60px tall */
   display: flex;
   align-items: center;
   color: #888;
 }
 
-.events-container {
+/* The events area: for "week" or "day" view */
+.events-grid {
   flex: 1;
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-auto-rows: 60px;
-  gap: 0.5rem;
+  display: flex;
+  position: relative;
 }
 
-.event {
-  padding: 0.5rem;
-  border-radius: 8px;
-  color: #333;
-  display: flex;
-  flex-direction: column;
+/* In week mode, 7 columns for 7 days */
+.seven-columns {
+  justify-content: space-between;
+}
+
+/* In day mode, 1 column */
+.one-column {
   justify-content: center;
 }
 
-.event-time {
+.day-column {
+  position: relative;
+  width: 13%; /* roughly 7 columns -> 100/7=14.28, you can adjust */
+  border: 1px solid #eee;
+  background-color: #fafafa;
+  margin-right: 0.5rem;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.day-column:last-of-type {
+  margin-right: 0;
+}
+
+/* Each event is absolutely positioned within its day-column */
+.event {
+  position: absolute;
+  left: 5%;
+  width: 90%;
+  border-radius: 8px;
+  padding: 0.5rem;
+  color: #333;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   font-size: 0.85rem;
+}
+
+/* We assume top offset = (startHour - 7) * 60, height = duration * 60 */
+
+.event-time {
+  font-size: 0.75rem;
   margin-bottom: 0.25rem;
   color: #666;
 }
 
+/* FLOATING BUTTON */
 .add-event-button {
   position: absolute;
   bottom: 2rem;
@@ -199,34 +264,52 @@
   border: none;
   border-radius: 8px;
   cursor: pointer;
+  z-index: 10;
 }
 
 .add-event-button:hover {
   background-color: #2563eb;
 }
 
-/* Modal */
+/* MODAL */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0,0,0,0.6);
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 100;
 }
 
 .modal {
   background: #fff;
   padding: 2rem;
   border-radius: 8px;
-  width: 300px;
+  width: 320px;
+  max-width: 90%;
+}
+
+.modal form div {
+  margin-bottom: 1rem;
+}
+
+.modal label {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.modal input {
+  width: 100%;
+  padding: 0.25rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 .modal-actions {
-  margin-top: 1rem;
   display: flex;
   justify-content: flex-end;
   gap: 0.5rem;
@@ -246,4 +329,33 @@
 .modal-actions button:last-of-type {
   background-color: #3b82f6;
   color: #fff;
+}
+
+/* FOOTER */
+.footer {
+  text-align: center;
+  padding: 1rem;
+  background-color: #fff;
+  border-top: 1px solid #ccc;
+  margin-top: 1rem;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .app-container {
+    flex-direction: column;
+    height: auto;
+  }
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    overflow-x: auto;
+  }
+  .main-calendar {
+    padding: 1rem 0.5rem;
+  }
+  .day-column {
+    width: 200px; /* or something narrower for mobile */
+    margin-right: 0.25rem;
+  }
 }

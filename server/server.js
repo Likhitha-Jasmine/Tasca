@@ -25,3 +25,8 @@ mongoose.connect('mongodb://localhost:27017/tasca', {
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 })
 .catch(err => console.error(err));
+// At the top with the other routes:
+const eventRoutes = require('./routes/events');
+
+// Then use the route, e.g.:
+app.use('/api/events', eventRoutes);
