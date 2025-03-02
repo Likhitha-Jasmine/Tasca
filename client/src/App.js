@@ -146,7 +146,7 @@ function App() {
             className="user-avatar"
           />
           <div>
-            <h2>Antonio Lorenzo</h2>
+            <h2>Likhitha Jasmine</h2>
             <p>My Calendars</p>
           </div>
         </div>
